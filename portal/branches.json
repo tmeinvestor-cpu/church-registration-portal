@@ -1,0 +1,12 @@
+[
+  { "id": 1, "country": "Nigeria", "state": "Abuja", "name": "COZA HQ – Guzape", "active": true },
+  { "id": 2, "country": "Nigeria", "state": "Abuja", "name": "COZA Lugbe", "active": true },
+
+  { "id": 3, "country": "Nigeria", "state": "Lagos", "name": "COZA Ikeja", "active": true },
+  { "id": 4, "country": "Nigeria", "state": "Lagos", "name": "COZA VI", "active": true },
+
+  { "id": 5, "country": "United Kingdom", "state": "London", "name": "COZA London", "active": true },
+  { "id": 6, "country": "United Kingdom", "state": "Manchester", "name": "COZA Manchester", "active": true },
+  { "id": 7, "country": "United Kingdom", "state": "Birmingham", "name": "COZA Birmingham", "active": true },
+  { "id": 8, "country": "UAE", "state": "Dubai", "name": "COZA Dubai",  "active": true }
+]
