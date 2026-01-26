@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>COZA GLOBAL Member Registration (AI POC)</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Member Registration</h2>
+
+    <p id="ai-status">Checking AI availability...</p>
+
+    <!-- Camera -->
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" hidden></canvas>
+
+    <!-- Consent -->
+    <label class="consent">
+        <input type="checkbox" id="consent" required>
+        I consent to facial recognition for attendance purposes only.
+    </label>
+
+    <!-- Personal -->
+    <input id="first_name" placeholder="First Name" required>
+    <input id="last_name" placeholder="Last Name" required>
+
+     <!-- Contact -->
+    <input id="phone" placeholder="Phone Number" required>
+    <input id="whatsapp" placeholder="WhatsApp Number (if different)">
+    <input id="email" placeholder="Email Address">
+
+    <!-- Residence -->
+    <input id="residential_city" placeholder="Residential City (Lekki, VI, etc)">
+
+    <!-- Church -->
+    <select id="country"></select>
+    <select id="state"></select>
+    <select id="branch_id"></select>
+
+    <button id="registerBtn" disabled>Start Face Scan</button>
+
+    <p id="status"></p>
+
+</div>
+
+<script src="/static/js/location.js"></script>
+<script src="/static/js/camera.js"></script>
+
+</body>
+</html>
