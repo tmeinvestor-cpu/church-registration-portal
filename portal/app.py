@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
-import base64, cv2, numpy as np, sqlite3, yaml
+import base64, cv2, numpy as np, sqlite3, yaml, os
 from datetime import datetime
+
 
 from ai.face_detector import FaceDetector
 from ai.face_embedding import get_embedding
@@ -10,7 +11,7 @@ from ai.face_quality import evaluate_face_quality
 app = Flask(__name__)
 
 detector = FaceDetector()
-faiss_db = FaissManager(auto_create=True)
+faiss_db = FaissManager()
 
 CONFIG = yaml.safe_load(open("config/config.yaml"))
 DEVICE = yaml.safe_load(open("config/device_config.yaml"))
@@ -61,7 +62,7 @@ def register():
             "message": CONFIG["ai_service_window"]["offline_message"]
         }), 503
 
-    data = request.json
+    data = request.get_json()
 
     # --------------------------------------------------
     # Decode image
@@ -87,6 +88,8 @@ def register():
     # --------------------------------------------------
     # Database
     # --------------------------------------------------
+    os.makedirs("database", exist_ok=True)
+
     conn = sqlite3.connect("database/church.db")
     conn.execute("PRAGMA foreign_keys = ON")
     cur = conn.cursor()
@@ -158,12 +161,12 @@ def register():
     conn.close()
 
     return jsonify({
+        "status": "success",
         "message": "✅ Registration successful",
-        "phone_used_before": existing_count > 0,
-        "existing_count": existing_count
+        "member_id": member_id,
+        "phone_used_before": existing_count > 0
     })
-
 
 # --------------------------------------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
+    app.run(host="0.0.0.0", port=5050, debug=DEBUG)
