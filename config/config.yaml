@@ -1,0 +1,255 @@
+# ======================================================
+# CHURCH AI ATTENDANCE SYSTEM — CONFIGURATION FILE
+# Version: 4.1
+# ======================================================
+
+# ------------------------------------------------------
+# BASIC CHURCH INFORMATION
+# ------------------------------------------------------
+organization:
+  name: "COZA Global"
+  timezone: "Africa/Lagos"
+
+branch:
+  branch_id: 1
+  branch_code: "COZA_LAGOS_IKEJA"
+  name: "COZA Lagos"
+  city: "Ikeja"
+  country: "Nigeria"
+
+
+# ------------------------------------------------------
+# AI AVAILABILITY WINDOW
+# ------------------------------------------------------
+ai_service_window:
+  enabled: true
+  start_time: "09:00"
+  end_time: "16:00"
+  offline_message: >
+    AI registration is currently offline.
+    Please try again between 9am and 4pm.
+
+# ------------------------------------------------------
+# SERVICE DAYS & TIMES
+# System automatically runs only within these hours
+# ------------------------------------------------------
+service_schedule:
+
+  sunday:
+    enabled: true
+    start_time: "07:00"
+    end_time: "14:00"
+
+  wednesday:
+    enabled: true
+    start_time: "17:00"
+    end_time: "20:00"
+
+  saturday:
+    enabled: true
+    start_time: "00:00"
+    end_time: "23:59"
+
+
+supabase:
+  url_env: "SUPABASE_URL"
+  key_env: "SUPABASE_KEY"
+
+#pinecone:
+#  key_env: "PINECONE_KEY"
+#  index: "church-members"
+
+# ------------------------------------------------------
+# DEVICE & SYNC
+# ------------------------------------------------------
+device:
+  allow_cross_branch_sync: true
+  trust_cloud_devices: true
+  register_on_first_startup: true
+  require_cloud_authorization: false
+
+sync:
+  enabled: true
+  interval_minutes: 10
+  full_sync_on_first_run: true
+  incremental_sync: true
+
+# ------------------------------------------------------
+# CAMERA CONFIGURATION
+# Add or remove cameras easily
+# DVR CONFIGURATION (DAHUA ANALOG)
+# ------------------------------------------------------
+dvr:
+  brand: "dahua"
+  ip: "192.168.101.2"
+  rtsp_port: 554
+  username: "admin"
+  password: "C0Z@LA1P"
+
+# ------------------------------------------------------
+# ANALOG CAMERAS VIA DAHUA DVR
+# ------------------------------------------------------
+cameras:
+
+  - name: "Rear Entrance Camera"
+    channel: 1
+    stream: "sub"
+    enabled: true
+
+  - name: "Auditorium Side Camera"
+    channel: 2
+    stream: "sub"
+    enabled: true
+
+  - name: "Exit Door Camera 3"
+    channel: 3
+    stream: "sub"
+    enabled: true
+
+  - name: "Exit Door Camera 4"
+    channel: 4
+    stream: "sub"
+    enabled: true
+
+  # ------------------------------------------------------
+  # IP CAMERAS
+  # ------------------------------------------------------
+  #- name: "Lobby IP Camera"
+  #  source: "rtsp://user:pass@192.168.1.50:554/stream1"
+  #  type: "ip"
+  #  enabled: true
+
+# ------------------------------------------------------
+# FACE RECOGNITION SETTINGS
+# ------------------------------------------------------
+face_recognition:
+
+  model: "local_opencv"
+  embedding_size: 512
+
+  # Face quality protection
+  minimum_face_size: 80
+  allow_multiple_faces: false
+  auto_crop_face: true
+  blur_threshold: 80
+
+  # Matching sensitivity
+  recognition_threshold: 0.62
+
+# ------------------------------------------------------
+# FAISS VECTOR DATABASE
+# Stores facial embeddings ONLY
+# ------------------------------------------------------
+faiss:
+
+  enabled: true
+  index_type: "FlatL2"
+  dimension: 512
+  index_path: "database/faiss.index"
+
+# ------------------------------------------------------
+# SQLITE DATABASE
+# Stores member details ONLY
+# ------------------------------------------------------
+sqlite:
+
+  enabled: true
+  db_path: "database/church.db"
+
+# ------------------------------------------------------
+# REGISTRATION PORTAL SETTINGS
+# ------------------------------------------------------
+registration_portal:
+
+  enabled: true
+  public_url: "https://your-portal-name.onrender.com"
+  qr_code_enabled: true
+
+  port: 5050
+  debug: false
+
+  auto_face_scan:
+    enabled: true
+    frames: 5
+    interval_seconds: 0.3
+
+  require_embedding_at_registration: true
+
+  required_fields:
+    - first_name
+    - last_name
+    - phone
+    - whatsapp_number
+    - email
+    - residential_city
+    - country
+    - state
+    - branch_id
+    - role
+    - level
+    - ministry_name
+    - is_worker
+    - consent
+
+# ------------------------------------------------------
+# CONTACT CHANNELS + WHATSAPP AUTOMATION SETTINGS
+# ------------------------------------------------------
+whatsapp:
+
+  enabled: true
+  provider: "meta_cloud_api"
+
+  phone_number_id: "YOUR_PHONE_NUMBER_ID"
+  access_token: "YOUR_LONG_LIVED_TOKEN"
+  business_account_id: "YOUR_WABA_ID"
+
+  templates:
+
+    attendance_message: "church_attendance_confirmed"
+    absence_message: "church_absence_message"
+    newcomer_message: "church_new_member"
+
+  personalization:
+    use_title: true
+    default_title: "Brother/Sister"
+
+# ------------------------------------------------------
+# MESSAGE DELIVERY RULES
+# ------------------------------------------------------
+message_rules:
+
+  send_after_service_minutes: 5
+
+  recognized_faces:
+    enabled: true
+
+  absent_members:
+    enabled: true
+
+  manual_fallback:
+    enabled: true
+
+email_rules:
+  email_enabled: true
+
+# ------------------------------------------------------
+# LOGGING
+# ------------------------------------------------------
+logging:
+
+  enabled: true
+  log_file: "logs/system.log"
+  level: "INFO"
+
+# ------------------------------------------------------
+# SYSTEM SAFETY
+# ------------------------------------------------------
+system:
+
+  auto_restart_on_error: true
+  save_backup_daily: true
+  backup_folder: "database/backups"
+
+# ======================================================
+# END OF CONFIG FILE
+# ======================================================
