@@ -84,7 +84,8 @@ dvr:
   ip: "192.168.101.2"
   rtsp_port: 554
   username: "admin"
-  password: "C0Z@LA1P"
+  password_env: "DVR_PASSWORD"
+
 
 # ------------------------------------------------------
 # ANALOG CAMERAS VIA DAHUA DVR
@@ -199,9 +200,10 @@ whatsapp:
   enabled: true
   provider: "meta_cloud_api"
 
-  phone_number_id: "YOUR_PHONE_NUMBER_ID"
-  access_token: "YOUR_LONG_LIVED_TOKEN"
-  business_account_id: "YOUR_WABA_ID"
+  access_token_env: "WHATSAPP_ACCESS_TOKEN"
+  phone_number_id_env: "WHATSAPP_PHONE_NUMBER_ID"
+  business_account_id_env: "WHATSAPP_WABA_ID"
+  
 
   templates:
 
