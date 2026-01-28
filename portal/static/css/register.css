@@ -1,0 +1,23 @@
+body {
+    font-family: system-ui;
+    padding: 40px;
+}
+
+form {
+    max-width: 900px;
+}
+
+input, select, button {
+    padding: 10px;
+    margin: 6px;
+    font-size: 15px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
