@@ -73,15 +73,21 @@ function stopCamera() {
 
 async function submitRegistration(imageData) {
     const payload = {
-        first_name: document.getElementById("first_name").value,
-        last_name: document.getElementById("last_name").value,
-        phone: document.getElementById("phone").value,
-        whatsapp_number: document.getElementById("whatsapp").value,
-        email: document.getElementById("email").value,
-        residential_city: document.getElementById("city").value,
-        branch_id: document.getElementById("branch").value,
+        first_name: document.getElementById("first_name").value.trim(),
+        last_name: document.getElementById("last_name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        whatsapp_number: document.getElementById("whatsapp").value.trim(),
+        email: document.getElementById("email").value.trim(),
+
+        residential_city: document.getElementById("residential_city").value,
+        country: document.getElementById("country").value,
+        state: document.getElementById("state").value,
+
+        branch_id: document.getElementById("branch_id").value,
+        is_worker: document.getElementById("is_worker").value === "yes",
         role: document.getElementById("role").value,
-        is_worker: document.getElementById("worker").value,
+        ministry_name: document.getElementById("ministry_name")?.value || "",
+
         consent: document.getElementById("consent").checked,
         image: imageData
     };
@@ -93,14 +99,12 @@ async function submitRegistration(imageData) {
     });
 
     const data = await res.json();
-    alert(data.message || "Registration complete");
+
+    if (!res.ok) {
+        alert(data.error || "Registration failed");
+        return;
+    }
+
+    document.getElementById("formBox").style.display = "none";
+    document.getElementById("successBox").style.display = "block";
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    checkAIStatus();
-    setInterval(checkAIStatus, 15000);
-
-    document
-        .getElementById("startScan")
-        .addEventListener("click", startFaceScan);
-});
