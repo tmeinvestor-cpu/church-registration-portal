@@ -2,11 +2,11 @@ from flask import Flask, request, jsonify, render_template
 import base64, cv2, numpy as np, sqlite3, yaml, os
 from datetime import datetime
 
-
 from ai.face_detector import FaceDetector
 from ai.face_embedding import get_embedding
 from ai.faiss_manager import FaissManager
 from ai.face_quality import evaluate_face_quality
+from ai.role_mapper import resolve_level
 
 app = Flask(__name__)
 
@@ -45,10 +45,14 @@ def home():
 
 @app.route("/api/ai-status")
 def ai_status():
+    online = ai_is_online()
+
     return jsonify({
-        "online": ai_is_online(),
+        "online": online,
         "message": CONFIG["ai_service_window"]["offline_message"]
-    })
+        if not online else "AI service available"
+    }), 200 if online else 503
+
 
 
 # --------------------------------------------------
@@ -62,7 +66,7 @@ def register():
             "message": CONFIG["ai_service_window"]["offline_message"]
         }), 503
 
-    data = request.get_json()
+    data = request.json
 
     # --------------------------------------------------
     # Decode image
@@ -84,6 +88,16 @@ def register():
         return jsonify({
             "message": f"Face quality too low ({score})"
         }), 400
+
+    # ---------------------------------------
+    # Face capture already completed here
+    # ---------------------------------------
+
+    role = data.get("role", "member")
+    is_worker = data.get("is_worker") == "yes"
+    ministry_name = data.get("ministry_name")
+
+    level = resolve_level(role, is_worker)
 
     # --------------------------------------------------
     # Database
@@ -133,8 +147,12 @@ def register():
             country,
             state,
             branch_id,
-            device_id
-        ) VALUES (?,?,?,?,?,?,?,?,?,?)
+            device_id,
+            role,
+            level,
+            ministry_name,
+            is_worker
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     """, (
         data["first_name"],
         data["last_name"],
@@ -144,8 +162,12 @@ def register():
         data.get("residential_city"),
         data["country"],
         data["state"],
-        branch_id,
-        device_id
+        data.get("branch_id"),
+        DEVICE["device"]["device_id"],
+        role,
+        level,
+        ministry_name,
+        is_worker
     ))
 
     member_id = cur.lastrowid
@@ -169,4 +191,4 @@ def register():
 
 # --------------------------------------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050, debug=DEBUG)
+    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
