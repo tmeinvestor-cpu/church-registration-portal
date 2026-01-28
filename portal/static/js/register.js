@@ -29,9 +29,8 @@ async function startFaceScan() {
     if (captureInProgress) return;
     captureInProgress = true;
 
-    video = document.createElement("video");
-    video.autoplay = true;
-    video.playsInline = true;
+    video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
 
     videoStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
@@ -40,9 +39,7 @@ async function startFaceScan() {
 
     video.srcObject = videoStream;
 
-    const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-
     let frames = [];
     let captured = 0;
 
@@ -51,7 +48,6 @@ async function startFaceScan() {
         canvas.height = video.videoHeight;
 
         ctx.drawImage(video, 0, 0);
-
         frames.push(canvas.toDataURL("image/jpeg"));
 
         captured++;
@@ -59,7 +55,7 @@ async function startFaceScan() {
         if (captured >= 5) {
             clearInterval(captureInterval);
             stopCamera();
-            submitRegistration(frames[frames.length - 1]);
+            submitRegistration(frames.at(-1));
         }
     }, 300);
 }
@@ -108,3 +104,54 @@ async function submitRegistration(imageData) {
     document.getElementById("formBox").style.display = "none";
     document.getElementById("successBox").style.display = "block";
 }
+// =====================================================
+// PAGE INITIALIZATION
+// =====================================================
+document.addEventListener("DOMContentLoaded", () => {
+
+    // -----------------------------------
+    // AI status check
+    // -----------------------------------
+    checkAIStatus();
+    setInterval(checkAIStatus, 15000);
+
+    // -----------------------------------
+    // Start face scan button
+    // -----------------------------------
+    document
+        .getElementById("registerBtn")
+        .addEventListener("click", startFaceScan);
+
+    // -----------------------------------
+    // Worker → Role logic
+    // -----------------------------------
+    document
+        .getElementById("is_worker")
+        .addEventListener("change", (e) => {
+
+            const roleBox = document.getElementById("roleBox");
+
+            if (e.target.value === "yes") {
+                roleBox.style.display = "block";
+            } else {
+                roleBox.style.display = "none";
+            }
+        });
+
+    // -----------------------------------
+    // SOP → Ministry logic
+    // -----------------------------------
+    document
+        .getElementById("role")
+        .addEventListener("change", (e) => {
+
+            const churchBox = document.getElementById("churchBox");
+
+            if (e.target.value === "sop") {
+                churchBox.style.display = "block";
+            } else {
+                churchBox.style.display = "none";
+            }
+        });
+
+});
