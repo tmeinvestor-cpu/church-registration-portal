@@ -1,64 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>COZA GLOBAL Member Registration (AI POC)</title>
+    <title>COZA GLOBAL Member Registration</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
 
+</head>
 <body>
 
-<div class="container">
+<div class="container" id="formBox">
 
-    <div id="formBox">
+    <h2>Member Registration</h2>
 
-        <h2>Member Registration</h2>
+    <p id="ai-status">Checking AI availability...</p>
 
-        <p id="ai-status">Checking AI availability...</p>
+    <!-- CAMERA -->
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" hidden></canvas>
 
-        <!-- Camera -->
-        <video id="video" autoplay playsinline></video>
-        <canvas id="canvas" hidden></canvas>
+    <!-- CONSENT -->
+    <label class="consent">
+        <input type="checkbox" id="consent">
+        I consent to facial recognition for attendance purposes only.
+    </label>
 
-        <!-- Consent -->
-        <label class="consent">
-            <input type="checkbox" id="consent" required>
-            I consent to facial recognition for attendance purposes only.
-        </label>
+    <!-- BASIC INFO -->
+    <input id="first_name" placeholder="First Name" required>
+    <input id="last_name" placeholder="Last Name" required>
 
-        <!-- Personal -->
-        <input id="first_name" placeholder="First Name" required>
-        <input id="last_name" placeholder="Last Name" required>
+    <input id="phone" placeholder="Phone Number" required>
+    <input id="whatsapp" placeholder="WhatsApp Number (optional)">
+    <input id="email" placeholder="Email Address (optional)">
+    <input id="residential_city" placeholder="Residential City">
 
-        <!-- Contact -->
-        <input id="phone" placeholder="Phone Number" required>
-        <input id="whatsapp" placeholder="WhatsApp Number (if different)">
-        <input id="email" placeholder="Email Address">
+    <!-- LOCATION -->
+    <select id="country"></select>
+    <select id="state"></select>
+    <select id="branch_id"></select>
 
-        <!-- Residence -->
-        <input id="residential_city" placeholder="Residential City">
+    <!-- WORKFORCE -->
+    <label class="consent">
+        Are you an active worker in the COZA Global Workforce?
+    </label>
 
-        <!-- Church -->
-        <select id="country"></select>
-        <select id="state"></select>
-        <select id="branch_id"></select>
+    <select id="is_worker">
+        <option value="">Select</option>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+    </select>
 
-        <button id="registerBtn" disabled>
-            Start Face Scan
-        </button>
+    <!-- ROLE -->
+    <div id="roleBox" style="display:none">
+        <label>Which best describes your role?</label>
 
-        <p id="status"></p>
-
+        <select id="role">
+            <option value="">Select role</option>
+            <option value="worker">Worker</option>
+            <option value="leader">Leader (HOD / AHOD)</option>
+            <option value="cmt">CMT</option>
+            <option value="sop">Son of the Prophet (SOP)</option>
+            <option value="pastor">Branch Pastor</option>
+        </select>
     </div>
 
-    <!-- SUCCESS SCREEN -->
-    <div id="successBox" style="display:none">
-        <h2>✅ Registration Successful</h2>
-        <p>Thank you. Please proceed.</p>
-        <p>Preparing next registration...</p>
+    <!-- SOP CHURCH -->
+    <div id="churchBox" style="display:none">
+        <input id="ministry_name" placeholder="Name of your ministry / church">
     </div>
 
+    <button id="registerBtn" disabled>Start Face Scan</button>
+
+    <p id="status"></p>
+
+</div>
+
+<!-- SUCCESS -->
+<div class="container" id="successBox" style="display:none">
+    <h2>✅ Registration Successful</h2>
+    <p>Thank you for registering.</p>
+    <p>Preparing next registration...</p>
 </div>
 
 <script src="/static/js/location.js"></script>
