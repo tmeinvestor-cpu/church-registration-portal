@@ -6,3 +6,4 @@ supabase==2.4.0
 opencv-python-headless==4.9.0.80
 numpy==1.26.4
 pillow
+PyYAML==6.0.1
