@@ -118,9 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------------------
     // Start face scan button
     // -----------------------------------
-    document
-        .getElementById("registerBtn")
-        .addEventListener("click", startFaceScan);
+    
+    document.getElementById("startScan").addEventListener("click", startFaceScan);
 
     // -----------------------------------
     // Worker → Role logic
