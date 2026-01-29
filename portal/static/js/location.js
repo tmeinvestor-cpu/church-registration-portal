@@ -9,11 +9,11 @@ const BRANCHES = {
             { id: 3, code: "COZA_LAGOS", name: "COZA Lagos", city: "Ikeja" },
             { id: 4, code: "COZA_VI/CHILDREN CHURCH", name: "COZA VI", city: "Maryland" }
         ],
-        "Ilorin": [
+        "Kwara": [
             { id: 5, code: "COZA_ILORIN", name: "COZA Ilorin", city: "Tanke" }
         ],
-        "PH": [
-            { id: 6, code: "COZA_PH", name: "COZA PH", city: "Rumuomasi" }
+        "Rivers": [
+            { id: 6, code: "COZA_PH", name: "COZA Port Harcourt", city: "Rumuomasi" }
         ]
     },
     "United Kingdom": {
