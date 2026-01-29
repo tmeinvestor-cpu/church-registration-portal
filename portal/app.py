@@ -30,29 +30,29 @@ DEBUG = CONFIG["registration_portal"].get("debug", False)
 BRANCHES = {
     "Nigeria": {
         "Abuja": [
-            { id: 1, code: "COZA_HQ", name: "COZA Abuja", city: "Guzape" },
-            { id: 2, code: "COZA_LUGBE", name: "COZA Lugbe", city: "Lugbe" }
+            {"id": 1, "code": "COZA_HQ", "name": "COZA Abuja", "city": "Guzape"},  # ✅ Quotes on keys!
+            {"id": 2, "code": "COZA_LUGBE", "name": "COZA Lugbe", "city": "Lugbe"}
         ],
         "Lagos": [
-            { id: 3, code: "COZA_LAGOS", name: "COZA Lagos", city: "Ikeja" },
-            { id: 4, code: "COZA_VI/CHILDREN CHURCH", name: "COZA VI", city: "Maryland" }
+            {"id": 3, "code": "COZA_LAGOS", "name": "COZA Lagos", "city": "Ikeja"},
+            {"id": 4, "code": "COZA_VI/CHILDREN CHURCH", "name": "COZA VI", "city": "Maryland"}
         ],
         "Kwara": [
-            { id: 5, code: "COZA_ILORIN", name: "COZA Ilorin", city: "Tanke" }
+            {"id": 5, "code": "COZA_ILORIN", "name": "COZA Ilorin", "city": "Tanke"}
         ],
         "Rivers": [
-            { id: 6, code: "COZA_PH", name: "COZA Port Harcourt", city: "Rumuomasi" }
+            {"id": 6, "code": "COZA_PH", "name": "COZA Port Harcourt", "city": "Rumuomasi"}
         ]
     },
     "United Kingdom": {
         "Greater London": [
-            { id: 7, code: "COZA_LONDON", name: "COZA London", city: "London" }
+            {"id": 7, "code": "COZA_LONDON", "name": "COZA London", "city": "London"}
         ],
         "West Midlands": [
-            { id: 8, code: "COZA_BIRMINGHAM", name: "COZA Birmingham", city: "Birmingham" }
+            {"id": 8, "code": "COZA_BIRMINGHAM", "name": "COZA Birmingham", "city": "Birmingham"}
         ],
         "Greater Manchester": [
-            { id: 9, code: "COZA_MANCHESTER", name: "COZA Manchester", city: "Manchester" }
+            {"id": 9, "code": "COZA_MANCHESTER", "name": "COZA Manchester", "city": "Manchester"}
         ]
     }
 }
