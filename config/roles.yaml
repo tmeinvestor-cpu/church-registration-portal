@@ -1,3 +1,7 @@
+# ======================================================
+# ROLE CONFIGURATION FOR COZA GLOBAL CHURCH SYSTEM
+# ======================================================
+
 roles:
   Member: 1
   Worker: 2
@@ -5,3 +9,16 @@ roles:
   CMT: 4
   SOP: 5
   Branch Pastor: 7
+
+# Role descriptions for reference
+role_descriptions:
+  Member: "Regular church member"
+  Worker: "Active worker in the COZA Global Workforce"
+  Leader: "HOD or AHOD in church leadership"
+  CMT: "Church Management Team member"
+  SOP: "Son of the Prophet - mentee pastors from other churches"
+  Branch Pastor: "Pastor overseeing a branch location"
+
+# VIP notification levels
+# Members with these levels trigger automatic notification to branch pastor when visiting
+vip_levels: [3, 4, 5, 7]
