@@ -1,0 +1,7 @@
+roles:
+  Member: 1
+  Worker: 2
+  Leader: 3
+  CMT: 4
+  SOP: 5
+  Branch Pastor: 7
