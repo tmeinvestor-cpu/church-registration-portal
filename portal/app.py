@@ -220,18 +220,51 @@ def register():
             traceback.print_exc()
             return jsonify({"message": f"Image decoding failed: {str(e)}"}), 400
 
+        # Replace the original block with this:
 
-        face_img, face_obj = detector.detect_single_face(frame)
+        detection = detector.detect_single_face(frame)
 
-        if face_img is None:
+        if detection is None:
             return jsonify({"message": "No face detected. Please try again."}), 400
 
-        passed, score = evaluate_face_quality(face_img)
+        # Handle different possible return formats
+        if isinstance(detection, tuple):
+            if len(detection) >= 2:
+                face_img = detection[0]     # first item = cropped face
+                face_obj = detection[1]     # second item = metadata / object
+                # Ignore any extra items (landmarks, score, etc.)
+            else:
+                face_img = detection[0] if len(detection) == 1 else None
+                face_obj = None
+        else:
+            # Single return value (just the crop)
+            face_img = detection
+            face_obj = None
 
+        if face_img is None or (hasattr(face_img, 'size') and face_img.size == 0):
+            return jsonify({"message": "No valid face crop detected. Try again."}), 400
+
+        # Now safe to call quality check
+        passed, score = evaluate_face_quality(face_img)
         if not passed:
             return jsonify({
                 "message": f"Face quality too low (score: {score:.2f}). Please ensure good lighting and look directly at the camera."
             }), 400
+
+        # ... continue with the rest of registration ...
+
+
+        #face_img, face_obj = detector.detect_single_face(frame)
+
+        #if face_img is None:
+        #    return jsonify({"message": "No face detected. Please try again."}), 400
+
+    #    passed, score = evaluate_face_quality(face_img)
+
+    #    if not passed:
+    #        return jsonify({
+    #            "message": f"Face quality too low (score: {score:.2f}). Please ensure good lighting and look directly at the camera."
+    #        }), 400
 
         # --------------------------------------------------
         # Process role and level
