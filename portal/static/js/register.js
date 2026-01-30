@@ -371,27 +371,35 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("❌ Start scan button not found!");
     }
 
-    // Worker logic
+    // Worker → Role visibility + reset ministry if needed
     document.getElementById("is_worker").addEventListener("change", (e) => {
         const roleBox = document.getElementById("roleBox");
+        const churchBox = document.getElementById("churchBox");
+        const roleSelect = document.getElementById("role");
+        const ministryInput = document.getElementById("ministry_name");
+
         if (e.target.value === "yes") {
             roleBox.style.display = "block";
         } else {
             roleBox.style.display = "none";
-            document.getElementById("role").value = "";
+            if (roleSelect) roleSelect.value = "";           // Clear role
+
+            // Also hide ministry box and clear input when worker changes to No
+            if (churchBox) churchBox.style.display = "none";
+            if (ministryInput) ministryInput.value = "";
         }
     });
 
-    // SOP logic
+    // SOP → Ministry visibility (keep this, but add safety)
     document.getElementById("role").addEventListener("change", (e) => {
         const churchBox = document.getElementById("churchBox");
+        const ministryInput = document.getElementById("ministry_name");
+
         if (e.target.value === "sop") {
             churchBox.style.display = "block";
         } else {
             churchBox.style.display = "none";
-            if (document.getElementById("ministry_name")) {
-                document.getElementById("ministry_name").value = "";
-            }
+            if (ministryInput) ministryInput.value = "";     // Clear when role changes away from sop
         }
     });
 
