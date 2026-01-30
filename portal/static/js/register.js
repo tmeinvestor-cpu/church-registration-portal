@@ -6,6 +6,7 @@
 let videoStream = null;
 let video = null;
 let captureInProgress = false;
+let phoneCheckTimeout = null;
 
 async function checkAIStatus() {
     const statusText = document.getElementById("ai-status");
@@ -39,6 +40,44 @@ async function checkAIStatus() {
     }
 }
 
+// Phone duplicate check function
+async function checkPhoneDuplicate() {
+    const phoneInput = document.getElementById("phone");
+    const phone = phoneInput.value.trim();
+    const warningBox = document.getElementById("phoneWarning");
+    const countSpan = document.getElementById("phoneCount");
+
+    warningBox.style.display = "none";
+
+    if (phone.length < 10) return;
+
+    try {
+        const res = await fetch(`/api/check-phone?phone=${encodeURIComponent(phone)}`);
+        const data = await res.json();
+
+        if (data.count > 0) {
+            countSpan.textContent = data.count;
+            warningBox.style.display = "block";
+            console.log(`⚠️ Phone ${phone} used by ${data.count} member(s)`);
+        }
+    } catch (err) {
+        console.error("Phone check failed:", err);
+    }
+}
+
+// Setup phone listener
+function setupPhoneListener() {
+    const phoneInput = document.getElementById("phone");
+
+    phoneInput.addEventListener("input", () => {
+        clearTimeout(phoneCheckTimeout);
+        phoneCheckTimeout = setTimeout(checkPhoneDuplicate, 1000);
+    });
+
+    phoneInput.addEventListener("blur", checkPhoneDuplicate);
+}
+
+
 async function startFaceScan() {
     // Prevent multiple clicks
     if (captureInProgress) {
@@ -67,6 +106,17 @@ async function startFaceScan() {
     if (!document.getElementById("phone").value.trim()) {
         alert("Please enter your phone number");
         return;
+    }
+
+    // ADD THIS BEFORE BRANCH CHECK:
+    const warningBox = document.getElementById("phoneWarning");
+    if (warningBox.style.display === "block") {
+        const choice = document.querySelector('input[name="phoneChoice"]:checked').value;
+        if (choice === "change") {
+            document.getElementById("phone").focus();
+            alert("Please enter a different phone number");
+            return;
+        }
     }
 
     if (!document.getElementById("branch_id").value) {
@@ -103,6 +153,7 @@ async function startFaceScan() {
 
         console.log("✅ Camera access granted");
         video.srcObject = videoStream;
+        video.style.display = "block";  // Make preview visible during scan
 
         // Wait for video metadata to load
         await new Promise((resolve, reject) => {
@@ -172,6 +223,7 @@ async function startFaceScan() {
 
                 // Stop camera
                 stopCamera();
+                video.style.display = "none";  // Hide after capture
 
                 // Use the last (most recent) frame
                 const finalImage = frames[frames.length - 1];
@@ -360,6 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // AI status check
     checkAIStatus();
+    setupPhoneListener();
     setInterval(checkAIStatus, 15000);
 
     // Start face scan button
