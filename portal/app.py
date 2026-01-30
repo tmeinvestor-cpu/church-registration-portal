@@ -220,38 +220,50 @@ def register():
             traceback.print_exc()
             return jsonify({"message": f"Image decoding failed: {str(e)}"}), 400
 
-        # Replace the original block with this:
+        # --------------------------------------------------
+        # Face detection – safe version that never crashes on unpacking
+        # --------------------------------------------------
 
-        detection = detector.detect_single_face(frame)
+        detection_result = detector.detect_single_face(frame)
 
-        if detection is None:
-            return jsonify({"message": "No face detected. Please try again."}), 400
+        if detection_result is None:
+            return jsonify({"message": "No face detected. Please try again with your face clearly visible."}), 400
 
         # Handle different possible return formats
-        if isinstance(detection, tuple):
-            if len(detection) >= 2:
-                face_img = detection[0]     # first item = cropped face
-                face_obj = detection[1]     # second item = metadata / object
-                # Ignore any extra items (landmarks, score, etc.)
+        if isinstance(detection_result, tuple) or isinstance(detection_result, list):
+            num_returned = len(detection_result)
+
+            if num_returned == 0:
+                return jsonify({"message": "Face detector returned empty result"}), 500
+
+            face_img = detection_result[0]  # always take the cropped face as first item
+
+            if num_returned >= 2:
+                face_obj = detection_result[1]  # take metadata/object as second item
             else:
-                face_img = detection[0] if len(detection) == 1 else None
-                face_obj = None
+                face_obj = None  # or {} if you prefer
+
+            # Optional: log if unexpected format (helps future debugging)
+            if num_returned != 2:
+                print(f"Warning: detect_single_face returned {num_returned} values instead of 2 → using first two")
+                print("Returned:", detection_result)
         else:
-            # Single return value (just the crop)
-            face_img = detection
+            # Single value returned (just the crop)
+            face_img = detection_result
             face_obj = None
 
+        # Safety check on the face crop
         if face_img is None or (hasattr(face_img, 'size') and face_img.size == 0):
-            return jsonify({"message": "No valid face crop detected. Try again."}), 400
+            return jsonify({"message": "Detected face crop is invalid/empty. Try better lighting or positioning."}), 400
 
-        # Now safe to call quality check
+        # Now proceed with quality check
         passed, score = evaluate_face_quality(face_img)
         if not passed:
             return jsonify({
-                "message": f"Face quality too low (score: {score:.2f}). Please ensure good lighting and look directly at the camera."
+                "message": f"Face quality too low (score: {score:.2f}). Ensure good lighting, no blur, and look straight at the camera."
             }), 400
 
-        # ... continue with the rest of registration ...
+        # ... rest of your registration code (save to DB, etc.) ...
 
 
         #face_img, face_obj = detector.detect_single_face(frame)
