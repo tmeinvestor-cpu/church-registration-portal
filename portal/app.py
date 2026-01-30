@@ -257,11 +257,27 @@ def register():
             return jsonify({"message": "Detected face crop is invalid/empty. Try better lighting or positioning."}), 400
 
         # Now proceed with quality check
-        passed, score = evaluate_face_quality(face_img)
+        quality = evaluate_face_quality(face_img)
+
+        if not isinstance(quality, dict) or "passed" not in quality or "score" not in quality:
+            print("Face quality function returned unexpected format:", quality)
+            return jsonify({"message": "Internal error during face quality check"}), 500
+
+        passed = quality["passed"]
+        score = quality["score"]
+        reasons = quality.get("reasons", [])
+
         if not passed:
-            return jsonify({
-                "message": f"Face quality too low (score: {score:.2f}). Ensure good lighting, no blur, and look straight at the camera."
-            }), 400
+            message = f"Face quality too low (score: {score:.2f})."
+            if reasons:
+                message += " " + "; ".join(reasons)
+            else:
+                message += " Ensure good lighting, steady hold, and centered face."
+
+            return jsonify({"message": message}), 400
+
+        # Success path
+        # ... your registration logic ...
 
         # ... rest of your registration code (save to DB, etc.) ...
 
