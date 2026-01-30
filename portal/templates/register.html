@@ -17,13 +17,10 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
         .container {
-            flex: 1;
-            max-width: 480px;
             width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 16px;
             background: white;
@@ -32,14 +29,14 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            padding: 12px 0;
+            padding: 16px 0;
         }
         .header img {
-            height: 56px;
+            height: 64px;
             width: auto;
         }
         .main-title {
-            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            font-size: clamp(1.9rem, 4.5vw, 2.8rem);
             font-weight: 700;
             color: #1e40af;
             text-align: center;
@@ -47,7 +44,7 @@
             line-height: 1.1;
         }
         .subtitle {
-            font-size: clamp(1rem, 3.5vw, 1.15rem);
+            font-size: clamp(1rem, 3vw, 1.25rem);
             color: #4b5563;
             text-align: center;
             margin: 0 0 24px;
@@ -56,12 +53,18 @@
         #ai-status {
             text-align: center;
             font-weight: 600;
-            padding: 10px 16px;
+            padding: 12px 16px;
             border-radius: 12px;
             margin: 0 auto 28px;
-            max-width: 360px;
             background: #ecfdf5;
             color: #065f46;
+            font-size: clamp(1rem, 3vw, 1.15rem);
+            width: 100%;
+            max-width: none; /* full width on larger screens */
+        }
+        .form-content {
+            max-width: 480px;
+            margin: 0 auto;
         }
         .form-group {
             margin-bottom: 20px;
@@ -82,14 +85,18 @@
         label.consent {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            margin: 24px 0 32px;
+            gap: 10px;
+            margin: 16px 0 24px;
             font-size: 1rem;
-            line-height: 1.45;
+            line-height: 1.4;
             color: #374151;
+        }
+        label.consent span {
+            flex: 1;
         }
         button#startScan {
             width: 100%;
+            max-width: 360px;
             padding: 16px;
             font-size: 1.15rem;
             font-weight: 600;
@@ -98,7 +105,8 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            margin-top: 20px;
+            margin: 24px auto 0;
+            display: block;
         }
         button#startScan:disabled {
             background: #9ca3af;
@@ -107,6 +115,8 @@
         #successBox {
             text-align: center;
             padding: 48px 20px 40px;
+            max-width: 480px;
+            margin: 0 auto;
         }
         #successBox .checkmark {
             font-size: clamp(4.5rem, 12vw, 6rem);
@@ -134,19 +144,29 @@
             cursor: pointer;
         }
 
+        /* Laptop / large screen adjustments */
         @media (min-width: 768px) {
             .container {
-                padding: 32px;
-                max-width: 520px;
-            }
-            .main-title {
-                font-size: 2.5rem;
-            }
-            .subtitle {
-                font-size: 1.25rem;
+                padding: 32px 48px;
             }
             .header img {
-                height: 72px;
+                height: 80px;
+            }
+            .main-title {
+                font-size: 3rem;
+            }
+            .subtitle {
+                font-size: 1.4rem;
+            }
+            #ai-status {
+                font-size: 1.25rem;
+                padding: 16px;
+            }
+            .form-content {
+                max-width: 600px;
+            }
+            button#startScan {
+                max-width: 420px;
             }
         }
     </style>
@@ -159,85 +179,87 @@
         <img src="/static/images/coza-logo.png" alt="COZA Global Logo">
     </div>
 
-    <!-- Main title & subtitle – centered, prominent -->
+    <!-- Main title & subtitle -->
     <h1 class="main-title">COZA Check-In</h1>
     <p class="subtitle">AI Member Registration</p>
 
     <p id="ai-status">Checking AI availability...</p>
 
-    <!-- CAMERA -->
-    <video id="video" autoplay playsinline></video>
-    <canvas id="canvas" hidden></canvas>
+    <div class="form-content">
+        <!-- CAMERA -->
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" hidden></canvas>
 
-    <!-- CONSENT -->
-    <label class="consent">
-        <input type="checkbox" id="consent">
-        I consent to facial recognition for attendance purposes only.
-    </label>
+        <!-- CONSENT – tighter spacing -->
+        <label class="consent">
+            <input type="checkbox" id="consent">
+            <span>I consent to facial recognition for attendance purposes only.</span>
+        </label>
 
-    <!-- FORM FIELDS – better spaced -->
-    <div class="form-group">
-        <input id="first_name" placeholder="First Name" required>
-    </div>
-    <div class="form-group">
-        <input id="last_name" placeholder="Last Name" required>
-    </div>
-    <div class="form-group">
-        <input id="phone" placeholder="Phone Number (e.g. 08012345678)" required>
-    </div>
-    <div class="form-group">
-        <input id="whatsapp" placeholder="WhatsApp Number (optional)">
-    </div>
-    <div class="form-group">
-        <input id="email" placeholder="Email Address (optional)">
-    </div>
-    <div class="form-group">
-        <input id="residential_city" placeholder="Residential City">
-    </div>
+        <!-- BASIC INFO -->
+        <div class="form-group">
+            <input id="first_name" placeholder="First Name" required>
+        </div>
+        <div class="form-group">
+            <input id="last_name" placeholder="Last Name" required>
+        </div>
+        <div class="form-group">
+            <input id="phone" placeholder="Phone Number (e.g. 08012345678)" required>
+        </div>
+        <div class="form-group">
+            <input id="whatsapp" placeholder="WhatsApp Number (optional)">
+        </div>
+        <div class="form-group">
+            <input id="email" placeholder="Email Address (optional)">
+        </div>
+        <div class="form-group">
+            <input id="residential_city" placeholder="Residential City">
+        </div>
 
-    <!-- LOCATION -->
-    <div class="form-group">
-        <select id="country"><option value="">Select Country</option></select>
-    </div>
-    <div class="form-group">
-        <select id="state"><option value="">Select State/Region</option></select>
-    </div>
-    <div class="form-group">
-        <select id="branch_id"><option value="">Select Branch</option></select>
-    </div>
+        <!-- LOCATION -->
+        <div class="form-group">
+            <select id="country"><option value="">Select Country</option></select>
+        </div>
+        <div class="form-group">
+            <select id="state"><option value="">Select State/Region</option></select>
+        </div>
+        <div class="form-group">
+            <select id="branch_id"><option value="">Select Branch</option></select>
+        </div>
 
-    <!-- WORKFORCE -->
-    <label class="consent">
-        Are you an active worker in the COZA Global Workforce?
-    </label>
-    <div class="form-group">
-        <select id="is_worker">
-            <option value="">Select</option>
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-        </select>
-    </div>
+        <!-- WORKFORCE -->
+        <label class="consent">
+            Are you an active worker in the COZA Global Workforce?
+        </label>
+        <div class="form-group">
+            <select id="is_worker">
+                <option value="">Select</option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
 
-    <!-- ROLE -->
-    <div id="roleBox" style="display:none" class="form-group">
-        <label>Which best describes your role?</label>
-        <select id="role">
-            <option value="">Select role</option>
-            <option value="worker">Worker</option>
-            <option value="leader">Leader (HOD / AHOD)</option>
-            <option value="cmt">CMT</option>
-            <option value="sop">Son of the Prophet (SOP)</option>
-            <option value="pastor">Branch Pastor</option>
-        </select>
-    </div>
+        <!-- ROLE -->
+        <div id="roleBox" style="display:none" class="form-group">
+            <label>Which best describes your role?</label>
+            <select id="role">
+                <option value="">Select role</option>
+                <option value="worker">Worker</option>
+                <option value="leader">Leader (HOD / AHOD)</option>
+                <option value="cmt">CMT</option>
+                <option value="sop">Son of the Prophet (SOP)</option>
+                <option value="pastor">Branch Pastor</option>
+            </select>
+        </div>
 
-    <!-- SOP MINISTRY -->
-    <div id="churchBox" style="display:none" class="form-group">
-        <input id="ministry_name" placeholder="Name of your ministry / church">
-    </div>
+        <!-- SOP MINISTRY -->
+        <div id="churchBox" style="display:none" class="form-group">
+            <input id="ministry_name" placeholder="Name of your ministry / church">
+        </div>
 
-    <button id="startScan" disabled>Start Face Scan</button>
-    <p id="status"></p>
+        <button id="startScan" disabled>Start Face Scan</button>
+        <p id="status"></p>
+    </div>
 </div>
 
 <!-- SUCCESS SCREEN -->
