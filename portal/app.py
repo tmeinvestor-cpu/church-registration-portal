@@ -71,13 +71,13 @@ def ai_is_online():
         # Try to initialize the detector and check if models are loaded
         if detector is None:
             return False
-        
+
         # Quick health check - verify FAISS is accessible
         if faiss_db is None:
             return False
-        
+
         return True
-        
+
     except Exception as e:
         print(f"⚠️  AI service check failed: {str(e)}")
         return False
@@ -96,10 +96,10 @@ def get_countries():
 def get_states():
     """Return list of states for a given country"""
     country = request.args.get("country")
-    
+
     if not country or country not in BRANCHES:
         return jsonify([])
-    
+
     return jsonify(list(BRANCHES[country].keys()))
 
 
@@ -108,13 +108,13 @@ def get_branches():
     """Return list of branches for a given country and state"""
     country = request.args.get("country")
     state = request.args.get("state")
-    
+
     if not country or not state:
         return jsonify([])
-    
+
     if country not in BRANCHES or state not in BRANCHES[country]:
         return jsonify([])
-    
+
     return jsonify(BRANCHES[country][state])
 
 
@@ -133,7 +133,7 @@ def ai_status():
     Not based on time window, but actual service availability.
     """
     online = ai_is_online()
-    
+
     return jsonify({
         "online": online,
         "message": "AI service available" if online else "AI service is currently unavailable. Please try again later."
@@ -146,7 +146,7 @@ def ai_status():
 @app.route("/register", methods=["POST"])
 def register():
     """Register a new member with facial recognition"""
-    
+
     # Check if AI service is actually available (not time-based)
     if not ai_is_online():
         return jsonify({
@@ -155,28 +155,71 @@ def register():
 
     try:
         data = request.json
-        
+
         # Validate required fields
         required_fields = ["first_name", "last_name", "phone", "country", "state"]
         for field in required_fields:
             if not data.get(field):
                 return jsonify({"message": f"Missing required field: {field}"}), 400
-        
+
         # Validate consent
         if not data.get("consent"):
             return jsonify({"message": "Consent is required"}), 400
 
+
         # --------------------------------------------------
-        # Decode image
+        # Decode image - IMPROVED WITH VALIDATION
         # --------------------------------------------------
         if not data.get("image"):
             return jsonify({"message": "No image provided"}), 400
-            
-        img_data = base64.b64decode(data["image"].split(",")[1])
-        frame = cv2.imdecode(
-            np.frombuffer(img_data, np.uint8),
-            cv2.IMREAD_COLOR
-        )
+
+        try:
+            # Get image data
+            image_data = data["image"]
+            print(f"📊 Received image data: {len(image_data)} characters")
+
+            # Remove data URL prefix if present
+            if "," in image_data:
+                image_data = image_data.split(",")[1]
+
+            # Decode base64
+            img_bytes = base64.b64decode(image_data)
+            print(f"📊 Decoded to: {len(img_bytes)} bytes")
+
+            # Verify we have data
+            if len(img_bytes) == 0:
+                print("❌ Error: Empty image buffer after decoding")
+                return jsonify({"message": "Empty image data received"}), 400
+
+            # Convert to numpy array
+            nparr = np.frombuffer(img_bytes, np.uint8)
+
+            # Verify numpy array has data
+            if nparr.size == 0:
+                print("❌ Error: Numpy array is empty")
+                return jsonify({"message": "Failed to decode image data"}), 400
+
+            # Decode image
+            frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+            # Verify image was decoded
+            if frame is None:
+                print("❌ Error: cv2.imdecode returned None")
+                return jsonify({"message": "Failed to decode image. Please try again."}), 400
+
+            # Verify image has content
+            if frame.size == 0:
+                print("❌ Error: Decoded frame is empty")
+                return jsonify({"message": "Decoded image is empty"}), 400
+
+            print(f"✅ Image decoded successfully: {frame.shape}")
+
+        except Exception as e:
+            print(f"❌ Image decoding error: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({"message": f"Image decoding failed: {str(e)}"}), 400
+
 
         face_img, face_obj = detector.detect_single_face(frame)
 
@@ -195,13 +238,13 @@ def register():
         # --------------------------------------------------
         role = data.get("role", "member")
         is_worker = data.get("is_worker", False)
-        
+
         # Convert string to boolean if needed
         if isinstance(is_worker, str):
             is_worker = is_worker.lower() == "yes"
-        
+
         ministry_name = data.get("ministry_name", "")
-        
+
         # Calculate level (backend secret - not returned to user)
         level = resolve_level(role, is_worker)
 
@@ -210,7 +253,7 @@ def register():
         # SOPs don't require branch_id, others do
         # --------------------------------------------------
         branch_id = None
-        
+
         if role.lower() != "sop":
             # Regular members and workers MUST have a branch
             if not data.get("branch_id"):
@@ -302,9 +345,9 @@ def register():
             faiss_db.save()
 
             conn.commit()
-            
+
             print(f"✅ Registered: {data['first_name']} {data['last_name']} (ID: {member_id}, Role: {role})")
-            
+
             # Return success WITHOUT exposing level (backend secret)
             return jsonify({
                 "status": "success",
@@ -312,13 +355,13 @@ def register():
                 "member_id": member_id,
                 "phone_used_before": existing_count > 0
             })
-            
+
         except Exception as e:
             conn.rollback()
             raise e
         finally:
             conn.close()
-            
+
     except Exception as e:
         print(f"❌ Registration error: {str(e)}")
         import traceback
@@ -351,5 +394,5 @@ if __name__ == "__main__":
     print(f"🤖 AI Service: {'Online' if ai_is_online() else 'Offline'}")
     print(f"🏢 Branches: {sum(len(states) for states in BRANCHES.values())} total")
     print("="*60)
-    
+
     app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
