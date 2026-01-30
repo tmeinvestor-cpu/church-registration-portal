@@ -139,6 +139,32 @@ def ai_status():
         "message": "AI service available" if online else "AI service is currently unavailable. Please try again later."
     }), 200 if online else 503
 
+@app.route("/api/check-phone")
+def check_phone():
+    """Check how many members are using this phone number"""
+    phone = request.args.get("phone", "").strip()
+
+    if not phone:
+        return jsonify({"count": 0})
+
+    try:
+        conn = sqlite3.connect("database/church.db")
+        cur = conn.cursor()
+
+        cur.execute(
+            "SELECT COUNT(*) FROM members WHERE phone = ?",
+            (phone,)
+        )
+
+        count = cur.fetchone()[0]
+        conn.close()
+
+        return jsonify({"count": count})
+
+    except Exception as e:
+        print(f"❌ Phone check error: {str(e)}")
+        return jsonify({"count": 0})
+
 
 # --------------------------------------------------
 # REGISTRATION
