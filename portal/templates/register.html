@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: #f8fafc;
@@ -32,7 +30,7 @@
             padding: 16px 0;
         }
         .header img {
-            height: 64px;
+            height: 56px;
             width: auto;
         }
         .main-title {
@@ -47,7 +45,7 @@
             font-size: clamp(1rem, 3vw, 1.25rem);
             color: #4b5563;
             text-align: center;
-            margin: 0 0 24px;
+            margin: 0 0 20px;
             font-weight: 500;
         }
         #ai-status {
@@ -55,12 +53,11 @@
             font-weight: 600;
             padding: 12px 16px;
             border-radius: 12px;
-            margin: 0 auto 28px;
+            margin: 0 auto 16px;           /* reduced from 28px → 16px */
             background: #ecfdf5;
             color: #065f46;
             font-size: clamp(1rem, 3vw, 1.15rem);
             width: 100%;
-            max-width: none; /* full width on larger screens */
         }
         .form-content {
             max-width: 480px;
@@ -82,16 +79,20 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
-        label.consent {
+        .consent-wrapper {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            margin: 16px 0 24px;
-            font-size: 1rem;
-            line-height: 1.4;
-            color: #374151;
+            gap: 8px;                    /* very small gap between checkbox and text */
+            margin: 12px 0 28px;         /* reduced vertical space around consent block */
         }
-        label.consent span {
+        .consent-wrapper input {
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        .consent-wrapper label {
+            font-size: 1rem;
+            line-height: 1.35;
+            color: #374151;
             flex: 1;
         }
         button#startScan {
@@ -105,7 +106,7 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            margin: 24px auto 0;
+            margin: 20px auto 0;
             display: block;
         }
         button#startScan:disabled {
@@ -144,10 +145,10 @@
             cursor: pointer;
         }
 
-        /* Laptop / large screen adjustments */
+        /* Laptop / large screen – full-width feel */
         @media (min-width: 768px) {
             .container {
-                padding: 32px 48px;
+                padding: 32px 5%;
             }
             .header img {
                 height: 80px;
@@ -161,6 +162,7 @@
             #ai-status {
                 font-size: 1.25rem;
                 padding: 16px;
+                margin-bottom: 32px;
             }
             .form-content {
                 max-width: 600px;
@@ -190,11 +192,13 @@
         <video id="video" autoplay playsinline></video>
         <canvas id="canvas" hidden></canvas>
 
-        <!-- CONSENT – tighter spacing -->
-        <label class="consent">
+        <!-- CONSENT – left-aligned, tight spacing -->
+        <div class="consent-wrapper">
             <input type="checkbox" id="consent">
-            <span>I consent to facial recognition for attendance purposes only.</span>
-        </label>
+            <label for="consent">
+                I consent to facial recognition for attendance purposes only.
+            </label>
+        </div>
 
         <!-- BASIC INFO -->
         <div class="form-group">
