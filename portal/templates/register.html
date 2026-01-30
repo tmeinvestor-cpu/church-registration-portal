@@ -7,61 +7,63 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: #f8fafc;
-            color: #1f2937;
-            margin: 0;
-            padding: 0;
             min-height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px;
-            background: white;
-        }
-        .header {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 16px 0;
+            flex-direction: column;
         }
-        .header img {
-            height: 56px;
+        .hero {
+            background: #1e40af;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            flex: 1;
+        }
+        .hero-logo {
+            margin-bottom: 24px;
+        }
+        .hero-logo img {
+            height: 80px;
             width: auto;
         }
-        .main-title {
-            font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+        .hero-title {
+            font-size: clamp(2rem, 6vw, 3.5rem);
             font-weight: 700;
-            color: #1e40af;
-            text-align: center;
-            margin: 0 0 8px;
+            margin-bottom: 8px;
             line-height: 1.1;
         }
-        .subtitle {
-            font-size: clamp(1rem, 3vw, 1.25rem);
-            color: #4b5563;
-            text-align: center;
-            margin: 0 0 20px;
-            font-weight: 500;
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            opacity: 0.9;
+            font-weight: 400;
         }
-        #ai-status {
-            text-align: center;
-            font-weight: 600;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin: 0 auto 16px;           /* reduced from 28px → 16px */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        .ai-status {
             background: #ecfdf5;
             color: #065f46;
-            font-size: clamp(1rem, 3vw, 1.15rem);
-            width: 100%;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #d1fae5;
         }
-        .form-content {
+        .form-wrapper {
             max-width: 480px;
+            width: 100%;
             margin: 0 auto;
+            padding: 32px 20px;
         }
         .form-group {
             margin-bottom: 20px;
@@ -82,22 +84,21 @@
         .consent-wrapper {
             display: flex;
             align-items: flex-start;
-            gap: 8px;                    /* very small gap between checkbox and text */
-            margin: 12px 0 28px;         /* reduced vertical space around consent block */
+            gap: 10px;
+            margin: 24px 0 32px;
         }
         .consent-wrapper input {
-            margin-top: 3px;
+            margin-top: 4px;
             flex-shrink: 0;
         }
         .consent-wrapper label {
             font-size: 1rem;
-            line-height: 1.35;
+            line-height: 1.4;
             color: #374151;
             flex: 1;
         }
         button#startScan {
             width: 100%;
-            max-width: 360px;
             padding: 16px;
             font-size: 1.15rem;
             font-weight: 600;
@@ -106,8 +107,6 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            margin: 20px auto 0;
-            display: block;
         }
         button#startScan:disabled {
             background: #9ca3af;
@@ -115,18 +114,20 @@
         }
         #successBox {
             text-align: center;
-            padding: 48px 20px 40px;
+            padding: 60px 24px;
+            background: white;
             max-width: 480px;
             margin: 0 auto;
+            flex: 1;
         }
         #successBox .checkmark {
-            font-size: clamp(4.5rem, 12vw, 6rem);
+            font-size: 6rem;
             color: #2e7d32;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         #successBox h1 {
             color: #2e7d32;
-            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            font-size: 2.2rem;
             margin-bottom: 16px;
         }
         #countdown {
@@ -145,54 +146,75 @@
             cursor: pointer;
         }
 
-        /* Laptop / large screen – full-width feel */
-        @media (min-width: 768px) {
-            .container {
-                padding: 32px 5%;
+        /* Laptop / large screen – split layout */
+        @media (min-width: 1024px) {
+            body {
+                flex-direction: row;
             }
-            .header img {
-                height: 80px;
+            .hero {
+                width: 45%;
+                padding: 60px 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
-            .main-title {
-                font-size: 3rem;
+            .main-content {
+                width: 55%;
+                flex-direction: column;
             }
-            .subtitle {
-                font-size: 1.4rem;
+            .form-wrapper {
+                max-width: 520px;
+                padding: 40px 32px;
             }
-            #ai-status {
-                font-size: 1.25rem;
-                padding: 16px;
-                margin-bottom: 32px;
+            .hero-logo img {
+                height: 100px;
             }
-            .form-content {
-                max-width: 600px;
+            .hero-title {
+                font-size: 3.5rem;
             }
-            button#startScan {
-                max-width: 420px;
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Mobile – stack vertically */
+        @media (max-width: 1023px) {
+            .hero {
+                padding: 40px 20px;
+            }
+            .form-wrapper {
+                padding: 24px 16px;
+            }
+            .consent-wrapper {
+                margin: 16px 0 24px;
+            }
+            .ai-status {
+                margin-bottom: 16px;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="container" id="formBox">
-    <!-- Header: logo top-right -->
-    <div class="header">
+<!-- Hero / Branding Section (left on laptop, top on mobile) -->
+<div class="hero">
+    <div class="hero-logo">
         <img src="/static/images/coza-logo.png" alt="COZA Global Logo">
     </div>
+    <h1 class="hero-title">COZA Check-In</h1>
+    <p class="hero-subtitle">AI Member Registration</p>
+</div>
 
-    <!-- Main title & subtitle -->
-    <h1 class="main-title">COZA Check-In</h1>
-    <p class="subtitle">AI Member Registration</p>
+<!-- Form Section (right on laptop, bottom on mobile) -->
+<div class="main-content" id="formBox">
+    <p class="ai-status" id="ai-status">Checking AI availability...</p>
 
-    <p id="ai-status">Checking AI availability...</p>
-
-    <div class="form-content">
+    <div class="form-wrapper">
         <!-- CAMERA -->
         <video id="video" autoplay playsinline></video>
         <canvas id="canvas" hidden></canvas>
 
-        <!-- CONSENT – left-aligned, tight spacing -->
+        <!-- CONSENT – left-aligned, tight -->
         <div class="consent-wrapper">
             <input type="checkbox" id="consent">
             <label for="consent">
