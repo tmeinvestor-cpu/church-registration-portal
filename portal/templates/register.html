@@ -1,17 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>COZA GLOBAL Member AI Registration</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COZA Check-In</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon"> <!-- Add your favicon if you have one -->
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+        }
+        .header {
+            text-align: center;
+            padding: 24px 0 16px;
+        }
+        .header img {
+            height: 72px;
+            width: auto;
+            max-width: 100%;
+        }
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin: 12px 0 4px;
+        }
+        .page-subtitle {
+            font-size: 1.05rem;
+            color: #4b5563;
+            font-weight: 500;
+            margin: 0 0 24px;
+        }
+        #ai-status {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin: 0 auto 24px;
+            max-width: 360px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label.consent {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+        button#startScan {
+            margin-top: 24px;
+            width: 100%;
+            max-width: 360px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #successBox {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        #successBox .checkmark {
+            font-size: 5.5rem;
+            color: #2e7d32;
+            margin-bottom: 16px;
+        }
+        #successBox h1 {
+            color: #2e7d32;
+            margin-bottom: 12px;
+            font-size: 1.8rem;
+        }
+        #countdown {
+            font-weight: 600;
+            color: #1e40af;
+            margin: 20px 0;
+        }
+        #successBox button {
+            min-width: 260px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+        @media (max-width: 480px) {
+            .header img { height: 64px; }
+            .page-title { font-size: 1.55rem; }
+            .page-subtitle { font-size: 0.95rem; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container" id="formBox">
+    <!-- Header & Branding -->
+    <div class="header">
+        <img src="/static/images/coza-logo.png" alt="COZA Global Logo">
+    </div>
 
-    <h2>COZA Global AI Member Registration</h2>
+    <h1 class="page-title">COZA Check-In</h1>
+    <p class="page-subtitle">AI Member Registration</p>
 
     <p id="ai-status">Checking AI availability...</p>
 
@@ -26,34 +115,51 @@
     </label>
 
     <!-- BASIC INFO -->
-    <input id="first_name" placeholder="First Name" required>
-    <input id="last_name" placeholder="Last Name" required>
-
-    <input id="phone" placeholder="Phone Number" required>
-    <input id="whatsapp" placeholder="WhatsApp Number (optional)">
-    <input id="email" placeholder="Email Address (optional)">
-    <input id="residential_city" placeholder="Residential City">
+    <div class="form-group">
+        <input id="first_name" placeholder="First Name" required>
+    </div>
+    <div class="form-group">
+        <input id="last_name" placeholder="Last Name" required>
+    </div>
+    <div class="form-group">
+        <input id="phone" placeholder="Phone Number (e.g. 08012345678)" required>
+    </div>
+    <div class="form-group">
+        <input id="whatsapp" placeholder="WhatsApp Number (optional)">
+    </div>
+    <div class="form-group">
+        <input id="email" placeholder="Email Address (optional)">
+    </div>
+    <div class="form-group">
+        <input id="residential_city" placeholder="Residential City">
+    </div>
 
     <!-- LOCATION -->
-    <select id="country"></select>
-    <select id="state"></select>
-    <select id="branch_id"></select>
+    <div class="form-group">
+        <select id="country"><option value="">Select Country</option></select>
+    </div>
+    <div class="form-group">
+        <select id="state"><option value="">Select State/Region</option></select>
+    </div>
+    <div class="form-group">
+        <select id="branch_id"><option value="">Select Branch</option></select>
+    </div>
 
     <!-- WORKFORCE -->
     <label class="consent">
         Are you an active worker in the COZA Global Workforce?
     </label>
-
-    <select id="is_worker">
-        <option value="">Select</option>
-        <option value="no">No</option>
-        <option value="yes">Yes</option>
-    </select>
+    <div class="form-group">
+        <select id="is_worker">
+            <option value="">Select</option>
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+    </div>
 
     <!-- ROLE -->
-    <div id="roleBox" style="display:none">
+    <div id="roleBox" style="display:none" class="form-group">
         <label>Which best describes your role?</label>
-
         <select id="role">
             <option value="">Select role</option>
             <option value="worker">Worker</option>
@@ -64,30 +170,25 @@
         </select>
     </div>
 
-    <!-- SOP CHURCH -->
-    <div id="churchBox" style="display:none">
+    <!-- SOP MINISTRY -->
+    <div id="churchBox" style="display:none" class="form-group">
         <input id="ministry_name" placeholder="Name of your ministry / church">
     </div>
 
     <button id="startScan" disabled>Start Face Scan</button>
-
-
     <p id="status"></p>
-
 </div>
 
-<!-- SUCCESS -->
+<!-- SUCCESS SCREEN -->
 <div class="container" id="successBox" style="display:none">
-    <h2>✅ Registration Successful</h2>
-    <p>Thank you for registering.</p>
-    <p>Preparing next registration...</p>
+    <div class="checkmark">✅</div>
+    <h1>Registration Successful!</h1>
+    <p>Thank you for registering with COZA Global.</p>
+    <p id="countdown"></p>
+    <button onclick="location.reload()">Register Another Person</button>
 </div>
 
 <script src="/static/js/location.js"></script>
-#<script src="/static/js/camera.js"></script>
 <script src="/static/js/register.js"></script>
-#<link rel="stylesheet" href="/static/css/register.css">
-
-
 </body>
 </html>
