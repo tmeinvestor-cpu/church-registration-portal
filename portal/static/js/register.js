@@ -11,6 +11,8 @@ async function checkAIStatus() {
     const statusText = document.getElementById("ai-status");
     const scanBtn = document.getElementById("startScan");
 
+    if (!statusText || !scanBtn) return;
+
     try {
         const res = await fetch("/api/ai-status");
 
@@ -118,7 +120,7 @@ async function startFaceScan() {
         // CRITICAL: Wait for camera to stabilize
         statusEl.innerText = "⏳ Camera stabilizing...";
         console.log("⏳ Waiting for camera to stabilize...");
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         // Start capturing frames
         statusEl.innerText = "📸 Capturing frames...";
@@ -225,7 +227,7 @@ function stopCamera() {
     if (videoStream) {
         videoStream.getTracks().forEach(t => {
             t.stop();
-            console.log(`  Stopped track: ${t.kind}`);
+            console.log(`Stopped track: ${t.kind}`);
         });
         videoStream = null;
     }
@@ -288,10 +290,57 @@ async function submitRegistration(imageData) {
         document.getElementById("formBox").style.display = "none";
         document.getElementById("successBox").style.display = "block";
 
-        // Auto-refresh after 3 seconds
-        setTimeout(() => {
+        // Play success sound
+        new Audio('/static/success-chime.mp3').play()
+            .then(() => console.log("Success sound played"))
+            .catch(err => console.warn("Sound playback failed:", err));
+
+        // Create countdown timer
+        let secondsLeft = 6;
+        const countdownEl = document.createElement("p");
+        countdownEl.id = "countdown";
+        countdownEl.style.fontSize = "1.3em";
+        countdownEl.style.marginTop = "20px";
+        countdownEl.style.textAlign = "center";
+        countdownEl.style.color = "#2e7d32";
+        countdownEl.textContent = `Returning to registration in ${secondsLeft} seconds...`;
+        document.getElementById("successBox").appendChild(countdownEl);
+
+        const timer = setInterval(() => {
+            secondsLeft--;
+            if (secondsLeft > 0) {
+                countdownEl.textContent = `Returning to registration in ${secondsLeft} seconds...`;
+            } else {
+                clearInterval(timer);
+                location.reload();
+            }
+        }, 1000);
+
+        // Reset button
+        const resetBtn = document.createElement("button");
+        resetBtn.textContent = "Register Another Person";
+        resetBtn.style.marginTop = "30px";
+        resetBtn.style.padding = "15px 40px";
+        resetBtn.style.fontSize = "1.4em";
+        resetBtn.style.backgroundColor = "#2e7d32";
+        resetBtn.style.color = "white";
+        resetBtn.style.border = "none";
+        resetBtn.style.borderRadius = "8px";
+        resetBtn.style.cursor = "pointer";
+        resetBtn.style.display = "block";
+        resetBtn.style.marginLeft = "auto";
+        resetBtn.style.marginRight = "auto";
+        resetBtn.onclick = () => {
+            clearInterval(timer);
             location.reload();
-        }, 3000);
+        };
+        document.getElementById("successBox").appendChild(resetBtn);
+
+
+       // Auto-refresh after 3 seconds
+      //  setTimeout(() => {
+      //      location.reload();
+      //  }, 3000);
 
     } catch (err) {
         console.error("❌ Network error:", err);
