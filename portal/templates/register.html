@@ -424,7 +424,21 @@
         </div>
         <h1 class="main-title">COZA Check-In</h1>
         <p class="subtitle">AI Member Registration</p>
-        <video id="video" autoplay playsinline></video>
+        <!-- Camera Preview with Placeholder (embossed box) -->
+        <div id="video-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" hidden></canvas>
+
+            <!-- Placeholder – visible on desktop before scan -->
+            <div id="camera-placeholder">
+                <div>
+                    <i class="fas fa-camera-retro"></i> <!-- or 📷 -->
+                    <br>
+                    Camera Preview<br>
+                    <small>Click "Start Face Scan" to begin</small>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- RIGHT PANEL (Form) -->
