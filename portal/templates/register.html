@@ -111,12 +111,73 @@
                 /*filter: brightness(0) invert(1);*/
             }
 
+            /* Camera Preview Container – gives the embossed/box look */
+            #video-container {
+                width: 100%;
+                max-width: 420px;              /* Slightly larger than before for better presence */
+                margin: 24px auto;             /* Centers it horizontally */
+                background: #000;
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.25);  /* Stronger embossed shadow */
+                border: 4px solid #2e7d32;     /* Green border for COZA branding */
+            }
+
+            /* The actual video element */
             #video {
                 width: 100%;
-                max-width: 400px;
-                border-radius: 16px;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+                height: auto;
+                display: none;                 /* Hidden by default */
+                object-fit: cover;             /* Ensures face fills frame nicely */
             }
+
+            /* Placeholder (only visible on desktop/large screens before scan) */
+            #camera-placeholder {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+                color: white;
+                font-size: 1.15rem;
+                font-weight: 500;
+                text-align: center;
+                padding: 24px;
+            }
+
+            #camera-placeholder i {
+                font-size: 4rem;
+                margin-bottom: 16px;
+                opacity: 0.85;
+            }
+
+            /* Hide placeholder completely on mobile phones */
+            @media (max-width: 1023px) {
+                #camera-placeholder {
+                    display: none !important;
+                }
+                #video-container {
+                    max-width: 100%;           /* Full width on small screens */
+                    margin: 16px auto 20px;
+                }
+            }
+
+            /* Desktop/large screen – more prominent */
+            @media (min-width: 1024px) {
+                #video-container {
+                    max-width: 480px;
+                    margin: 32px auto;
+                }
+                #camera-placeholder {
+                    font-size: 1.3rem;
+                }
+                #camera-placeholder i {
+                    font-size: 5rem;
+                }
+            }
+
         }
 
         /* Mobile Layout: Stacked */
