@@ -66,7 +66,7 @@
             .left-panel .header img {
                 height: 120px;
                 width: auto;
-                filter: brightness(0) invert(1); /* ← ADDED: Makes logo white */
+                /*filter: brightness(0) invert(1);*/ /* ← ADDED: Makes logo white */
                 display: block !important;
             }
 
@@ -108,7 +108,7 @@
                 height: 120px;
                 width: auto;
                 margin-bottom: 48px;
-                filter: brightness(0) invert(1);
+                /*filter: brightness(0) invert(1);*/
             }
 
             #video {
@@ -337,6 +337,16 @@
             color: #374151;
             margin-bottom: 12px;
             font-size: 1rem;
+        }
+
+        /* ==============================================
+           Add crisp rendering for logos on all devices
+           ============================================== */
+        .header img,
+        .hero-logo img,
+        .left-panel .header img {
+            image-rendering: crisp-edges;          /* Makes edges sharper on high-DPI screens */
+            image-rendering: -webkit-optimize-contrast; /*for older Safari */
         }
     </style>
 </head>
