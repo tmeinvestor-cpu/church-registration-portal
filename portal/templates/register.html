@@ -58,15 +58,16 @@
                 color: white;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start;
+                justify-content: center;
                 align-items: center;
                 text-align: center;
             }
 
             .left-panel .header img {
-                height: 100px;
+                height: 120px;
                 width: auto;
                 filter: brightness(0) invert(1); /* ← ADDED: Makes logo white */
+                display: block !important;
             }
 
             .right-panel {
@@ -74,7 +75,7 @@
                 overflow-y: auto;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start;
+                justify-content: center;
                 max-height: calc(100vh - 48px);
                 background: white;
             }
